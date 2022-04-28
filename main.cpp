@@ -1,50 +1,64 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <ctime>
+#include "settime.h"
+#include "room.h"
 using namespace std;
 
-class Room{
-private:
-    int room_id, beds, resident_q;
-    string renter_first_name, renter_last_name, date_of_rent, date_of_expire;
-    float price_per_night;
-public: 
-    void setRoom_id(int r){ room_id = r;}
-    void setBeds(int b){ beds = b;}    
-    void setResident_q(int r){ resident_q = r;}
-    void setRenterName(string a){ renter_first_name = a;}
-    void setRenterLast(string a){ renter_last_name = a;}
-    void setDateRent(string d){ date_of_rent = d;}
-    void setDateExpire(string d){ date_of_expire = d;}
-    void setPrice(float p){ price_per_night = p;}
+void registration(Room r){
+    
+    string n, l;
+    int q, d, m , y;
+    
 
-    int getRoom_id(){ return room_id;}
-    int getBeds(){ return beds;}    
-    int getResident_q(){ return resident_q;}
-    string getRenterName(){ return renter_first_name;}
-    string getRenderLast(){ return renter_last_name;}
-    string getDateRent(){ return date_of_rent;}
-    string getDateExpire(){ return date_of_expire;}
-    float getPrice(){ return price_per_night;}
-};
-
-void registration(){
-    string s;
-    int i;
-    float f;
-    cout << "\nEnter the name of renter : ";
-    cin >> s;
-    cout << ""
+    cout << "\nEnter the firts name of renter : ";
+    cin >> n;
+    cout << "\nEnter the last name of renter : ";
+    cin >> l;
+    cout << "\nEnter the number of residents : ";
+    cin >> q;
+    cout << "\nEnter the last date of the rent (DD>>MM>>YYYY) : ";
+    cin >> d >> m >> y;
+    char ch;
+    do{
+    
+    cout << "\n\n------Confirm ? (Y/N)------";
+    cin >> ch;
+    if(ch == 'y' || ch == 'Y'){
+        r.setRenterName(n);
+        r.setRenterLast(l);
+        r.setResident_q(q);
+        r.setDateExpire(d, m, y);
+        cout << "\n\n\t✓ Sucessfully added ✓\n";
+        break;
+    }
+    else if(ch == 'n' || ch == 'N'){
+        cout << "\n\n\tⓧ Canceled ⓧ\n";
+        break;
+    }
+    }while(ch !='Y' || ch != 'y' || ch != 'n' || ch != 'N');
 }
 
 int main(){
-    
-
-    
-    
+    // try {
+    // int age = 15;
+    // if (age >= 18) {
+    //     cout << "Access granted - you are old enough.";
+    // } else {
+    //     throw runtime_error("404");
+    // }
+    // }
+    // catch (...) {
+    // cout << "Access denied - You must be at least 18 years old.\n";
+    // } 
+    Room r;
+    registration(r);
     
     
 
     system("pause");
     return 0;
 }
+
+
