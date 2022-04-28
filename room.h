@@ -4,13 +4,13 @@ using namespace std;
 
 class Room{
 private:
-    int room_id, beds, resident_q, type; //type 1-standard 2-lux 3-president
+    int beds, resident_q, type; //type 1-standard 2-lux 3-royal
     int date_of_rent[3], date_of_expire[3];
-    string renter_first_name, renter_last_name;
+    string room_id, renter_first_name, renter_last_name;
     float price_per_night;
 public: 
     Room(){}
-    void setRoom_id(int r){ room_id = r;}
+    void setRoom_id(string r){ room_id = r;}
     void setBeds(int b){ beds = b;}    
     void setResident_q(int r){ resident_q = r;}
     void setRenterName(string a){ renter_first_name = a;}
@@ -29,7 +29,7 @@ public:
     void setType(int t){ type = t;}
 
 
-    int getRoom_id(){ return room_id;}
+    string getRoom_id(){ return room_id;}
     int getBeds(){ return beds;}    
     int getResident_q(){ return resident_q;}
     int getDateRentDay(){ return date_of_rent[0];}
