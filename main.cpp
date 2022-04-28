@@ -22,7 +22,7 @@ public:
     int getBeds(){ return beds;}    
     int getResident_q(){ return resident_q;}
     string getRenterName(){ return renter_first_name;}
-    
+    string getRenderLast(){ return renter_last_name;}
     string getDateRent(){ return date_of_rent;}
     string getDateExpire(){ return date_of_expire;}
     float getPrice(){ return price_per_night;}
