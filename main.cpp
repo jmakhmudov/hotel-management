@@ -5,45 +5,51 @@
 #include "room.h"
 using namespace std;
 
-void setTime(Room r){
+void setTime(Room& r, int a){
     // current date/time based on current system
     time_t now = time(0);
     tm *ltm = localtime(&now);
-    
     int year =1900 + ltm->tm_year, month = 1 + ltm->tm_mon, day = ltm->tm_mday;
-    r.setDateRent(day, month, year);
     
-
-    
+    if (a==1){
+        r.setDateRent(day, month, year);
+    }
+    else if (a==2){
+        r.setDateClean(day, month, year);
+    }
     // cout << "Time: "<< 1 + ltm->tm_hour << ":";
     // cout << 1 + ltm->tm_min << ":";
     // cout << 1 + ltm->tm_sec << endl;
 }
 
-void registration(Room r){
+void registration(Room& r){
     
     string n, l;
     int q, d, m , y;
     char ch;
+    long p;
 
     cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ REGISTRATION ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
-    cout << "\nEnter the first name of renter : ";
+    cout << "\nEnter the first name of guest : ";
     cin >> n;
-    cout << "\nEnter the last name of renter : ";
+    cout << "Enter the last name of guest : ";
     cin >> l;
-    cout << "\nEnter the number of residents : ";
+    cout << "Enter the phone number : ";
+    cin >> p;
+    cout << "Enter the number of guests : ";
     cin >> q;
-    cout << "\nEnter the last date of the rent (DD>>MM>>YYYY) : ";
+    cout << "Enter the last date of the rent (DD>>MM>>YYYY) : ";
     cin >> d >> m >> y;
     do{
     cout << "\n\n------Confirm ? (Y/N)------";
     cin >> ch;
     if(ch == 'y' || ch == 'Y'){
-        r.setRenterName(n);
-        r.setRenterLast(l);
-        r.setResident_q(q);
+        r.setGuestName(n);
+        r.setGuestLast(l);
+        r.setGuest_q(q);
         r.setDateExpire(d, m, y);
-        setTime(r);
+        r.setGuestPhone(p);
+        setTime(r, 1);
         cout << "\n\n\t✓ Sucessfully added ✓\n";
         break;
     }
@@ -59,10 +65,12 @@ void addRoom(){
     string i;
     float p;
     char ch;
+    ofstream fout("database.dat", ios::binary);
 
-    cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ADD A ROOM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
     do{
-        cout<<"\nChoose the type of room :\n➊ Standard\n➋ Lux\n➌ Royal\n";
+        cout << "\033[2J\033[1;1H";
+        cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ NEW ROOM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+        cout<<"\n\nChoose the type of room :\n➊ Standard\n➋ Lux\n➌ Royal\n";
         cin >> t;
         if(t==1||t==2||t==3){
             break;
@@ -71,36 +79,60 @@ void addRoom(){
     
     cout << "\nEnter the room ID : ";
     cin >> i;
-    cout << "\nEnter the number of beds : ";
+    cout << "Enter the number of beds : ";
     cin >> b;
-    cout << "\nEnter the price per night : ";
+    cout << "Enter the price per night : ";
     cin >> p;
+    cout << "\033[2J\033[1;1H";
     Room r;
-    cout << "\n\n▨▨▨▨▨▨▨▨▨▨▨▨▨▨ NEW ROOM "<< i << " ▨▨▨▨▨▨▨▨▨▨▨▨▨▨";
-    cout << "\nType : ";
-    switch(t){
-    case 1:
-        cout << "STANDARD";
-        break;
-    case 2:
-        cout << "LUX";
-        break;
-    case 3: 
-        cout << "ROYAL";
-        break;
-    }
-    cout << "\nBeds : " << b;
-    cout << "\nPrice : $" << p;
 
     do{
-    cout << "\n\n------Confirm ? (Y/N)------";
-    cin >> ch;
+        cout << "\033[2J\033[1;1H";
+        cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ NEW ROOM "<< i << " ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+        cout << "\nType : ";
+        switch(t){
+        case 1:
+            cout << "STANDARD";
+            break;
+        case 2:
+            cout << "LUX";
+            break;
+        case 3: 
+            cout << "ROYAL";
+            break;
+        }
+        cout << "\nBeds : " << b;
+        cout << "\nPrice : $" << p;
+        cout << "\n\n------ Confirm ? (Y/N) ------";
+        cin >> ch;
     if(ch == 'y' || ch == 'Y'){
+        
         r.setType(t);
         r.setRoom_id(i);
         r.setBeds(b);
         r.setPrice(p);
-        cout << "\n\n\t✓ Sucessfully added ✓\n";
+        
+        do{
+        cout << "\n\n------ Is the room cleaned? (Y/N) ------";
+        cin >> ch;
+        if(ch == 'y' || ch == 'Y'){
+            setTime(r, 2);
+            cout << "\033[2J\033[1;1H";
+            cout << "\n\t✓ The Last Cleaning Date Was Successfully Added ( "<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear() <<" ) ✓";
+            
+            break;
+
+        }
+        else if(ch == 'n' || ch == 'N'){
+            cout << "\033[2J\033[1;1H";
+            cout << "\n\n\tⓧ Cleaning Date Was Not Set ⓧ\n";
+            break;
+        }
+        }while(ch !='Y' || ch != 'y' || ch != 'n' || ch != 'N');
+        fout.write((char*)&r, sizeof(r));
+        fout.close();
+        cout << "\n\t✓ Room Was Sucessfully Added ✓\n";
+
         break;
     }
     else if(ch == 'n' || ch == 'N'){
@@ -108,6 +140,70 @@ void addRoom(){
         break;
     }
     }while(ch !='Y' || ch != 'y' || ch != 'n' || ch != 'N');
+    
+}
+
+void showRooms(){
+    int m;
+    ifstream fin("database.dat", ios::binary);
+    Room r;
+    do{
+        cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ SHOW ROOM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+        cout << "\n\n\t\t➊ STANDARD\n\t\t➋ LUX\n\t\t➌ ROYAL\n\n\t\t⓿ EXIT\n";
+        cin >> m;
+        switch(m){
+        case 1:
+            cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ STANDARD ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+            while (fin.read((char*)&r, sizeof(r))){
+                if (r.getType()==1){
+                    cout << "\n\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<endl;
+                    
+                }
+            }
+            cout << "\n\n\t\t⓿ EXIT\n";
+            fin.close();
+            break;
+        }
+    }while(m!=0);
+    
+}
+
+void menu(){
+    int m=1;
+    fstream file("database.dat", ios::binary);
+    file.close();
+    while(m!=0){
+        cout << "\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ HOTEL MANAGEMENT SYSTEM ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+        cout << "\n\n\t\t➊ REGISTRATION\n\t\t➋ ROOMS\n\t\t➌ GUESTS\n\t\t➍ DATA EXPORT\n\n\t\t⓿ EXIT\n";
+        cin >> m;
+        switch(m){
+        case 0: 
+            m=0;
+            break;
+        case 1: 
+            cout << "\033[2J\033[1;1H";
+            break;
+        case 2:
+            int a;
+            cout << "\033[2J\033[1;1H";
+            cout << "\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ ROOMS ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+            cout << "\n\n\t\t➊ SHOW ROOMS\n\t\t➋ NEW ROOM\n\n\t\t⓿ EXIT\n";
+            cin >> a;
+            switch(a){
+            case 1:
+                cout << "\033[2J\033[1;1H";
+                showRooms();
+                break;
+            case 2: 
+                cout << "\033[2J\033[1;1H";
+                addRoom();
+                break;
+            }
+            break;
+        default: break;
+
+        }
+    }
     
 }
 
@@ -124,12 +220,13 @@ int main(){
     // cout << "Access denied - You must be at least 18 years old.\n";
     // } 
     fstream file("database.dat", ios::binary);
-    addRoom();
-    
-    
-    
-    
+    menu();
 
+    
+    
+    
+    
+    
     system("pause");
     return 0;
 }
