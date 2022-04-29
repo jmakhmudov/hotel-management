@@ -65,7 +65,7 @@ void addRoom(){
     string i;
     float p;
     char ch;
-    ofstream fout("database.dat", ios::binary);
+    ofstream fout("database.dat", ios::binary|ios::app);
 
     do{
         cout << "\033[2J\033[1;1H";
@@ -154,14 +154,32 @@ void showRooms(){
         switch(m){
         case 1:
             cout << "\n\n▓▓▓▓▓▓▓▓▓▓▓▓▓▓ STANDARD ▓▓▓▓▓▓▓▓▓▓▓▓▓▓";
+            cout << "\nID\tBEDS\tPRICE\tSTATUS\tCLEANING DATE";
             while (fin.read((char*)&r, sizeof(r))){
                 if (r.getType()==1){
-                    cout << "\n\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<endl;
-                    
+                    if (r.getGuest_q()==0){
+                        if(r.getDateCleanDay()==0){
+
+                            cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Empty\tNone"<<endl;
+                        }
+                        else{cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Empty\t"<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear()<<endl;}
+
+                    }
+                    else if(r.getGuest_q()!=0){
+                        if(r.getDateCleanDay()==0){
+
+                            cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Occupied\tNone"<<endl;
+                        }
+                        else{cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Occupied\t"<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear()<<endl;}
+                    }
                 }
+                
             }
             cout << "\n\n\t\t⓿ EXIT\n";
+            cin>>m;
             fin.close();
+            break;
+        case 2:
             break;
         }
     }while(m!=0);
