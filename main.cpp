@@ -65,7 +65,7 @@ void addRoom(){
     string i;
     float p;
     char ch;
-    ofstream fout("database.dat", ios::binary|ios::app);
+    ofstream fout("database.dat", ios_base::binary|ios_base::app);
 
     do{
         cout << "\033[2J\033[1;1H";
@@ -129,6 +129,7 @@ void addRoom(){
             break;
         }
         }while(ch !='Y' || ch != 'y' || ch != 'n' || ch != 'N');
+        fout.seekp(fout.tellp(), ios::end);
         fout.write((char*)&r, sizeof(r));
         fout.close();
         cout << "\n\t✓ Room Was Sucessfully Added ✓\n";
@@ -137,6 +138,7 @@ void addRoom(){
     }
     else if(ch == 'n' || ch == 'N'){
         cout << "\n\n\tⓧ Canceled ⓧ\n";
+        fout.close();
         break;
     }
     }while(ch !='Y' || ch != 'y' || ch != 'n' || ch != 'N');
@@ -160,17 +162,17 @@ void showRooms(){
                     if (r.getGuest_q()==0){
                         if(r.getDateCleanDay()==0){
 
-                            cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Empty\tNone"<<endl;
+                            cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<"$"<<r.getPrice()<<"\t"<<"Empty\tNone"<<endl;
                         }
-                        else{cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Empty\t"<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear()<<endl;}
+                        else{cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<"$"<<r.getPrice()<<"\t"<<"Empty\t"<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear()<<endl;}
 
                     }
                     else if(r.getGuest_q()!=0){
                         if(r.getDateCleanDay()==0){
 
-                            cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Occupied\tNone"<<endl;
+                            cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<"$"<<r.getPrice()<<"\t"<<"Occupied\tNone"<<endl;
                         }
-                        else{cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<r.getPrice()<<"\t"<<"Occupied\t"<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear()<<endl;}
+                        else{cout << "\n" << r.getRoom_id()<<"\t"<<r.getBeds()<<"\t"<<"$"<<r.getPrice()<<"\t"<<"Occupied\t"<< r.getDateCleanDay()<<"/"<<r.getDateCleanMonth()<<"/"<<r.getDateCleanYear()<<endl;}
                     }
                 }
                 
@@ -239,12 +241,6 @@ int main(){
     // } 
     fstream file("database.dat", ios::binary);
     menu();
-
-    
-    
-    
-    
-    
     system("pause");
     return 0;
 }
